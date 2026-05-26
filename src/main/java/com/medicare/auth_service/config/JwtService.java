@@ -13,9 +13,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class JwtService {
 
-    private final String SECRET =
-            "mysecretkeymysecretkeymysecretkeymysecretkey";
-
+	private final String SECRET =
+			"mysecretkeymysecretkeymysecretkeymysecretkey";
     public String generateToken(String username) {
 
         Key key = new SecretKeySpec(
