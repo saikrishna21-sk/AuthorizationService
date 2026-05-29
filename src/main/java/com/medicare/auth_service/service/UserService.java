@@ -3,6 +3,7 @@ package com.medicare.auth_service.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.medicare.auth_service.config.JwtService;
@@ -13,30 +14,31 @@ import com.medicare.auth_service.repository.UserRepository;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private JwtService jwtService;
+	@Autowired
+	private JwtService jwtService;
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    public String login(AuthRequest request) {
+	public User saveUser(User user) {
 
-        Optional<User> user =
-            userRepository.findByUsername(
-                request.getUsername());
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        if(user.isPresent()
-            && user.get().getPassword()
-               .equals(request.getPassword())) {
+		return userRepository.save(user);
+	}
 
-            return jwtService.generateToken(
-                    request.getUsername());
-        }
+	public String login(AuthRequest request) {
 
-        return "Invalid username or password";
-    }
+		Optional<User> user = userRepository.findByUsername(request.getUsername());
+
+		if (user.isPresent() && passwordEncoder.matches(request.getPassword(), user.get().getPassword())) {
+
+			return jwtService.generateToken(request.getUsername());
+		}
+
+		return "Invalid username or password";
+	}
 }
