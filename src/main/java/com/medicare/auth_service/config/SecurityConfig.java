@@ -20,8 +20,16 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		http.csrf(csrf -> csrf.disable())
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/register", "/auth/login", "/auth/test")
-						.permitAll().anyRequest().authenticated())
+		.authorizeHttpRequests(auth -> auth
+			    .requestMatchers(
+			            "/auth/register",
+			            "/auth/login",
+			            "/auth/test",
+			            "/swagger-ui/**",
+			            "/v3/api-docs/**")
+			    .permitAll()
+			    .anyRequest()
+			    .authenticated())
 				.httpBasic(Customizer.withDefaults());
 
 		return http.build();

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.medicare.auth_service.dto.AuthRequest;
 import com.medicare.auth_service.dto.AuthResponse;
+import com.medicare.auth_service.dto.UserResponse;
 import com.medicare.auth_service.entity.User;
 import com.medicare.auth_service.service.UserService;
 
@@ -20,8 +21,14 @@ public class AuthController {
 	private UserService userService;
     
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-    	return userService.saveUser(user);
+    public UserResponse register(@RequestBody User user) {
+
+        User savedUser = userService.saveUser(user);
+
+        return new UserResponse(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getRole());
     }
     
     @GetMapping("/test")

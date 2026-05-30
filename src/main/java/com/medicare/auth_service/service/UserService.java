@@ -36,7 +36,9 @@ public class UserService {
 
 		if (user.isPresent() && passwordEncoder.matches(request.getPassword(), user.get().getPassword())) {
 
-			return jwtService.generateToken(request.getUsername());
+			return jwtService.generateToken(
+			        user.get().getUsername(),
+			        user.get().getRole());
 		}
 
 		return "Invalid username or password";

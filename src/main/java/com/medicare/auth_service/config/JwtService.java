@@ -15,19 +15,19 @@ public class JwtService {
 
 	private final String SECRET =
 			"mysecretkeymysecretkeymysecretkeymysecretkey";
-    public String generateToken(String username) {
+    public String generateToken(String username,String role) {
 
         Key key = new SecretKeySpec(
                 SECRET.getBytes(),
                 SignatureAlgorithm.HS256.getJcaName());
 
+        
         return Jwts.builder()
                 .subject(username)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(
-                        new Date(
-                                System.currentTimeMillis()
-                                + 1000 * 60 * 60))
+                        new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(key)
                 .compact();
     }
